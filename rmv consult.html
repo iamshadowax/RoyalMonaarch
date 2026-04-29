@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RMV Consult — Build a Business That Runs Without You</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+:root{
+  --void:#05050a;
+  --deep:#08080f;
+  --surface:#0d0d18;
+  --panel:#111122;
+  --rim:#1a1a30;
+  --line:#242440;
+  --fade:#353560;
+  --muted:#6b6b9a;
+  --mid:#9898c0;
+  --text:#e8e8f5;
+  --bright:#ffffff;
+  --gold:#c8a84b;
+  --gold-dim:rgba(200,168,75,0.12);
+  --gold-glow:rgba(200,168,75,0.06);
+  --blue:#4a9eff;
+  --blue-dim:rgba(74,158,255,0.1);
+  --blue-glow:rgba(74,158,255,0.04);
+  --ff-serif:'Playfair Display',Georgia,serif;
+  --ff-sans:'Space Grotesk',sans-serif;
+  --ff-mono:'Space Mono',monospace;
+}
+body{
+  background:var(--void);
+  color:var(--text);
+  font-family:var(--ff-sans);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  cursor:none;
+}
+a{color:inherit;text-decoration:none}
+
+/* CURSOR */
+.cur,.cur-trail{position:fixed;border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%)}
+.cur{width:6px;height:6px;background:var(--gold);transition:transform .1s}
+.cur-trail{width:28px;height:28px;border:1px solid rgba(200,168,75,.35);transition:all .18s cubic-bezier(.2,.8,.2,1)}
+
+/* NOISE */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.028;pointer-events:none;z-index:9998;mix-blend-mode:overlay
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:0 60px;
+  transition:all .4s ease
+}
+nav.solid{
+  background:rgba(5,5,10,.88);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--line)
+}
+.nav-inner{
+  max-width:1280px;margin:0 auto;
+  height:72px;display:flex;align-items:center;justify-content:space-between
+}
+.logo{
+  font-family:var(--ff-serif);
+  font-size:1.375rem;font-weight:400;
+  letter-spacing:.04em;color:var(--bright)
+}
+.logo .dot{color:var(--gold)}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{
+  font-size:.7rem;font-weight:400;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);transition:color .2s
+}
+.nav-links a:hover{color:var(--text)}
+.nav-btn{
+  background:transparent;border:1px solid var(--gold);
+  color:var(--gold);font-family:var(--ff-sans);
+  font-size:.675rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;
+  padding:10px 24px;cursor:none;transition:all .25s
+}
+.nav-btn:hover{background:var(--gold);color:var(--void)}
+
+/* HERO */
+.hero{
+  min-height:100vh;position:relative;
+  display:flex;align-items:center;overflow:hidden
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 70% 40%, rgba(74,158,255,.07) 0%, transparent 60%),
+             radial-gradient(ellipse 50% 40% at 20% 80%, rgba(200,168,75,.06) 0%, transparent 60%),
+             var(--void)
+}
+.grid-overlay{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(74,158,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(74,158,255,.025) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 80% 80% at 60% 40%,black 0%,transparent 80%)
+}
+.hero-inner{
+  max-width:1280px;margin:0 auto;
+  padding:140px 60px 80px;
+  display:grid;grid-template-columns:1fr 420px;gap:80px;
+  align-items:center;position:relative;z-index:2;width:100%
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-bottom:36px;
+  font-family:var(--ff-mono);font-size:.6rem;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold)
+}
+.badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--gold);
+  animation:blink 2s infinite
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{
+  font-family:var(--ff-serif);
+  font-size:clamp(3rem,5.5vw,5.75rem);
+  font-weight:400;line-height:1.04;
+  letter-spacing:-.02em;
+  color:var(--bright);
+  margin-bottom:28px
+}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero-sub{
+  font-size:1rem;color:var(--mid);
+  max-width:480px;line-height:1.85;
+  font-weight:300;margin-bottom:48px
+}
+.hero-sub strong{color:var(--text);font-weight:500}
+.hero-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.btn-gold{
+  background:var(--gold);color:var(--void);
+  font-family:var(--ff-sans);font-size:.7rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:16px 36px;border:none;cursor:none;
+  transition:all .25s;display:inline-flex;align-items:center;gap:10px;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))
+}
+.btn-gold:hover{background:#e0bb5c;transform:translateX(3px)}
+.btn-ghost{
+  background:transparent;color:var(--muted);
+  font-family:var(--ff-sans);font-size:.7rem;font-weight:400;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:16px 28px;border:1px solid var(--rim);cursor:none;
+  transition:all .25s
+}
+.btn-ghost:hover{color:var(--text);border-color:var(--fade)}
+.hero-proof{
+  margin-top:60px;padding-top:40px;
+  border-top:1px solid var(--line);
+  display:flex;gap:48px
+}
+.proof-stat .n{
+  font-family:var(--ff-serif);
+  font-size:2.25rem;font-weight:400;
+  color:var(--bright);display:block;line-height:1
+}
+.proof-stat .l{
+  font-size:.625rem;font-family:var(--ff-mono);
+  color:var(--muted);letter-spacing:.15em;
+  text-transform:uppercase;margin-top:4px;display:block
+}
+
+/* HERO CARD */
+.hero-right{position:relative}
+.dashboard{
+  background:var(--panel);
+  border:1px solid var(--rim);
+  padding:0;overflow:hidden;
+  position:relative;
+  animation:float-y 7s ease-in-out infinite
+}
+@keyframes float-y{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+}
+.dash-header{
+  padding:16px 20px;
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface)
+}
+.dash-dots{display:flex;gap:6px}
+.dash-dot{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dash-dot:first-child{background:#e06c6c}
+.dash-dot:nth-child(2){background:#e0a56c}
+.dash-dot:last-child{background:#6ce07c}
+.dash-title{
+  font-family:var(--ff-mono);font-size:.55rem;
+  color:var(--muted);letter-spacing:.15em;text-transform:uppercase
+}
+.dash-body{padding:24px 20px}
+.dash-label{
+  font-family:var(--ff-mono);font-size:.55rem;
+  color:var(--blue);letter-spacing:.2em;text-transform:uppercase;
+  margin-bottom:6px
+}
+.dash-value{
+  font-family:var(--ff-serif);font-size:2rem;
+  font-weight:400;color:var(--bright);
+  margin-bottom:4px;display:block
+}
+.dash-sub{font-size:.75rem;color:var(--muted);margin-bottom:16px}
+.bar-track{height:2px;background:var(--rim);margin-bottom:20px;position:relative;overflow:hidden}
+.bar-fill{
+  height:100%;width:0;
+  background:linear-gradient(90deg,var(--gold),#f0c96a);
+  animation:bar-grow 1.8s .8s ease-out forwards
+}
+@keyframes bar-grow{to{width:75%}}
+.dash-row{display:flex;gap:10px;margin-bottom:14px}
+.dash-mini{
+  flex:1;background:var(--surface);
+  border:1px solid var(--line);
+  padding:12px 14px
+}
+.dm-val{
+  font-family:var(--ff-serif);font-size:1.125rem;
+  font-weight:400;color:var(--gold);display:block
+}
+.dm-lbl{
+  font-size:.55rem;font-family:var(--ff-mono);
+  color:var(--muted);text-transform:uppercase;
+  letter-spacing:.12em
+}
+.dash-log{border-top:1px solid var(--line);padding-top:14px}
+.log-item{
+  display:flex;align-items:center;gap:10px;
+  padding:6px 0;border-bottom:1px solid var(--line)
+}
+.log-item:last-child{border-bottom:none}
+.log-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0}
+.log-dot.gold{background:var(--gold)}
+.log-dot.green{background:#5ce08a}
+.log-text{font-size:.7rem;color:var(--mid);flex:1}
+.log-time{font-family:var(--ff-mono);font-size:.55rem;color:var(--muted)}
+
+/* CREDIBILITY STRIP */
+.cred{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--deep)}
+.cred-inner{
+  max-width:1280px;margin:0 auto;
+  padding:0 60px;
+  display:grid;grid-template-columns:repeat(5,1fr)
+}
+.cred-item{
+  padding:32px 24px;
+  border-right:1px solid var(--line);
+  display:flex;flex-direction:column;gap:3px
+}
+.cred-item:last-child{border-right:none}
+.cred-n{
+  font-family:var(--ff-serif);font-size:1.875rem;
+  font-weight:400;color:var(--bright);line-height:1
+}
+.cred-l{
+  font-size:.6rem;font-family:var(--ff-mono);
+  color:var(--muted);letter-spacing:.12em;text-transform:uppercase
+}
+
+/* SECTION */
+section{padding:120px 60px}
+.inner{max-width:1280px;margin:0 auto}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.eyebrow-line{width:24px;height:1px;background:var(--gold)}
+.eyebrow-txt{
+  font-family:var(--ff-mono);font-size:.575rem;
+  color:var(--gold);letter-spacing:.25em;text-transform:uppercase
+}
+h2{
+  font-family:var(--ff-serif);
+  font-size:clamp(2.25rem,3.8vw,3.875rem);
+  font-weight:400;line-height:1.1;letter-spacing:-.01em;
+  color:var(--bright)
+}
+h2 em{font-style:italic;color:var(--gold)}
+.lead{
+  font-size:.9375rem;color:var(--mid);
+  max-width:500px;line-height:1.85;
+  font-weight:300;margin-top:18px
+}
+
+/* PROBLEMS */
+.problem{background:var(--deep)}
+.problem-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid var(--line);
+  margin-top:56px
+}
+.prob-card{
+  padding:44px;border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  position:relative;overflow:hidden;
+  transition:background .3s
+}
+.prob-card:hover{background:var(--surface)}
+.prob-card:nth-child(2n){border-right:none}
+.prob-card:nth-child(3),.prob-card:nth-child(4){border-bottom:none}
+.prob-n{
+  font-family:var(--ff-mono);font-size:.55rem;
+  color:var(--fade);letter-spacing:.2em;margin-bottom:18px
+}
+.prob-t{
+  font-family:var(--ff-serif);font-size:1.5rem;
+  font-weight:400;color:var(--text);margin-bottom:10px
+}
+.prob-d{font-size:.85rem;color:var(--muted);line-height:1.75}
+.prob-arrow{
+  position:absolute;bottom:28px;right:28px;
+  color:var(--gold);font-size:1.125rem;
+  opacity:0;transition:opacity .3s;font-family:var(--ff-mono)
+}
+.prob-card:hover .prob-arrow{opacity:1}
+
+/* FRAMEWORK */
+.framework{background:var(--void)}
+.fw-layout{
+  display:grid;grid-template-columns:260px 1fr;gap:0;
+  margin-top:56px;border:1px solid var(--line)
+}
+.fw-tabs{border-right:1px solid var(--line)}
+.fw-tab{
+  display:flex;cursor:none;border-bottom:1px solid var(--line);
+  transition:background .2s
+}
+.fw-tab:last-child{border-bottom:none}
+.fw-tab.active{background:var(--gold-glow)}
+.fw-tab-num{
+  width:48px;min-width:48px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--ff-mono);font-size:.5rem;
+  color:var(--gold);letter-spacing:.1em;
+  border-right:1px solid var(--line)
+}
+.fw-tab-info{padding:20px 20px}
+.fw-tab-name{
+  font-size:.8125rem;font-weight:500;
+  color:var(--text);margin-bottom:2px;
+  transition:color .2s
+}
+.fw-tab.active .fw-tab-name{color:var(--gold)}
+.fw-tab-sub{font-size:.7rem;color:var(--muted)}
+.fw-detail{
+  padding:48px;background:var(--panel);
+  min-height:360px;position:relative;overflow:hidden
+}
+.fw-detail::before{
+  content:'';position:absolute;top:0;right:0;
+  width:180px;height:180px;
+  background:radial-gradient(circle,var(--gold-dim),transparent 70%);
+  pointer-events:none
+}
+.fw-tag{
+  font-family:var(--ff-mono);font-size:.55rem;
+  color:var(--gold);letter-spacing:.2em;
+  text-transform:uppercase;display:block;margin-bottom:22px
+}
+.fw-title{
+  font-family:var(--ff-serif);font-size:2.125rem;
+  font-weight:400;color:var(--bright);
+  margin-bottom:16px;line-height:1.15
+}
+.fw-body{
+  font-size:.875rem;color:var(--muted);
+  line-height:1.85;max-width:500px;margin-bottom:28px
+}
+.fw-pts{list-style:none;display:flex;flex-direction:column;gap:8px}
+.fw-pts li{
+  font-size:.8rem;color:var(--mid);
+  display:flex;align-items:flex-start;gap:12px
+}
+.fw-pts li::before{
+  content:'—';color:var(--gold);
+  font-family:var(--ff-mono);flex-shrink:0;margin-top:2px
+}
+
+/* PROGRAMS */
+.programs{background:var(--deep)}
+.sov-pillars{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:0;border:1px solid var(--line);margin-top:56px
+}
+.pillar{
+  border-right:1px solid var(--line);padding:0;
+  overflow:hidden;cursor:none;transition:background .3s
+}
+.pillar:last-child{border-right:none}
+.pillar:hover{background:var(--surface)}
+.pillar-top{
+  padding:36px 32px 28px;
+  border-bottom:1px solid var(--line)
+}
+.pillar-tier{
+  font-size:.55rem;font-family:var(--ff-mono);
+  color:var(--muted);letter-spacing:.18em;
+  text-transform:uppercase;margin-bottom:12px;display:block
+}
+.pillar-name{
+  font-family:var(--ff-serif);font-size:1.75rem;
+  font-weight:400;color:var(--text);margin-bottom:8px
+}
+.pillar-promise{font-size:.825rem;color:var(--muted);line-height:1.7}
+.pillar-body{padding:24px 32px 32px}
+.pillar-tag{
+  font-size:.6rem;font-family:var(--ff-mono);
+  color:var(--blue);letter-spacing:.18em;
+  text-transform:uppercase;margin-bottom:14px
+}
+.pillar-pts{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
+.pillar-pts li{
+  font-size:.78rem;color:var(--muted);
+  display:flex;align-items:center;gap:10px
+}
+.pillar-pts li::before{
+  content:'';width:12px;height:1px;
+  background:var(--gold);flex-shrink:0
+}
+.pillar.featured{background:var(--gold-glow)}
+.pillar.featured .pillar-name{color:var(--gold)}
+.pillar.featured .pillar-tag{color:var(--gold)}
+.pillar-badge{
+  display:inline-block;
+  background:var(--gold);color:var(--void);
+  font-size:.5rem;font-weight:700;letter-spacing:.15em;
+  text-transform:uppercase;padding:4px 10px;margin-bottom:14px
+}
+.pillar-cta{
+  display:flex;align-items:center;gap:10px;
+  font-size:.7rem;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text);
+  transition:gap .2s;cursor:none;
+  background:none;border:none;font-family:var(--ff-sans)
+}
+.pillar-cta .arrow{color:var(--gold)}
+.pillar:hover .pillar-cta{gap:16px}
+.pillar.featured .pillar-cta{color:var(--gold)}
+
+/* RESULTS */
+.results{background:var(--void)}
+.proof-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:24px;margin-top:56px
+}
+.proof-card{
+  border:1px solid var(--line);padding:32px;
+  background:var(--panel);transition:border-color .3s
+}
+.proof-card:hover{border-color:var(--gold)}
+.proof-stars{display:flex;gap:3px;margin-bottom:18px;color:var(--gold);font-size:.7rem}
+.proof-metric{
+  font-family:var(--ff-mono);font-size:.575rem;
+  color:var(--blue);letter-spacing:.18em;
+  text-transform:uppercase;
+  background:var(--blue-dim);
+  display:inline-block;padding:4px 10px;margin-bottom:18px
+}
+.proof-quote{
+  font-family:var(--ff-serif);font-size:1.0625rem;
+  font-weight:300;color:var(--text);
+  line-height:1.7;margin-bottom:24px;font-style:italic
+}
+.proof-author{display:flex;align-items:center;gap:12px}
+.proof-avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--surface);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--ff-serif);font-size:.9375rem;color:var(--gold)
+}
+.proof-name{font-size:.8125rem;font-weight:500;color:var(--text)}
+.proof-role{font-size:.7rem;color:var(--muted)}
+
+/* PHILOSOPHY / MANIFESTO */
+.philosophy{background:var(--deep);padding:80px 60px}
+.manifesto-inner{
+  max-width:1280px;margin:0 auto;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:72px 0;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center
+}
+.manifesto-quote{
+  font-family:var(--ff-serif);
+  font-size:clamp(1.625rem,2.5vw,2.25rem);
+  font-weight:300;font-style:italic;
+  color:var(--text);line-height:1.45
+}
+.manifesto-quote span{color:var(--gold)}
+.manifesto-beliefs{display:flex;flex-direction:column;gap:0}
+.mb{
+  display:flex;gap:18px;padding:18px 0;
+  border-bottom:1px solid var(--line);align-items:flex-start
+}
+.mb:first-child{border-top:1px solid var(--line)}
+.mb-num{
+  font-family:var(--ff-mono);font-size:.5rem;
+  color:var(--gold);letter-spacing:.15em;min-width:24px;margin-top:4px
+}
+.mb-text{
+  font-family:var(--ff-serif);font-size:1.0625rem;
+  font-weight:300;color:var(--text);line-height:1.55
+}
+
+/* TOOLS */
+.tools{background:var(--void)}
+.tools-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:0;border:1px solid var(--line);margin-top:56px
+}
+.tool-item{
+  border-right:1px solid var(--line);padding:48px 40px;
+  display:flex;flex-direction:column;gap:16px;
+  cursor:none;transition:background .2s;position:relative
+}
+.tool-item:last-child{border-right:none}
+.tool-item:hover{background:var(--gold-glow)}
+.tool-icon{
+  width:44px;height:44px;border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);font-size:1rem;
+  transition:border-color .2s
+}
+.tool-item:hover .tool-icon{border-color:var(--gold)}
+.tool-name{font-size:1rem;font-weight:500;color:var(--text)}
+.tool-desc{font-size:.8125rem;color:var(--muted);line-height:1.6}
+.tool-link{
+  font-size:.625rem;font-family:var(--ff-mono);
+  color:var(--gold);letter-spacing:.2em;
+  text-transform:uppercase;margin-top:auto;
+  display:flex;align-items:center;gap:8px
+}
+
+/* FINAL CTA */
+.final{
+  background:var(--deep);
+  border-top:1px solid var(--line);
+  text-align:center
+}
+.final-inner{max-width:820px;margin:0 auto}
+.cta-box{
+  border:1px solid var(--line);background:var(--panel);
+  padding:64px;position:relative;overflow:hidden
+}
+.cta-box::before{
+  content:'';position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(200,168,75,.05),transparent 70%);
+  pointer-events:none
+}
+.cta-box h2{font-size:clamp(2.25rem,3.5vw,3.5rem);margin-bottom:20px}
+.cta-box p{
+  font-size:1rem;color:var(--mid);
+  max-width:500px;margin:0 auto 40px;
+  line-height:1.85;font-weight:300
+}
+.cta-actions{display:flex;gap:16px;justify-content:center;align-items:center}
+.cta-note{
+  font-size:.7rem;color:var(--fade);
+  margin-top:20px;font-family:var(--ff-mono);letter-spacing:.05em
+}
+
+/* FOOTER */
+footer{
+  background:var(--deep);
+  border-top:1px solid var(--line);
+  padding:64px 60px
+}
+.footer-inner{max-width:1280px;margin:0 auto}
+.footer-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;
+  margin-bottom:56px;padding-bottom:56px;
+  border-bottom:1px solid var(--line)
+}
+.footer-brand-name{
+  font-family:var(--ff-serif);
+  font-size:1.375rem;color:var(--bright);margin-bottom:14px
+}
+.footer-brand-name span{color:var(--gold)}
+.footer-brand-p{
+  font-size:.8125rem;color:var(--muted);
+  line-height:1.8;max-width:260px
+}
+.footer-col h4{
+  font-family:var(--ff-mono);font-size:.55rem;
+  color:var(--gold);letter-spacing:.2em;
+  text-transform:uppercase;margin-bottom:18px
+}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.footer-col ul a{font-size:.8rem;color:var(--muted);transition:color .2s}
+.footer-col ul a:hover{color:var(--text)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:.7rem;color:var(--fade);font-family:var(--ff-mono)}
+.footer-legal{display:flex;gap:24px}
+.footer-legal a{font-size:.7rem;color:var(--fade);transition:color .2s}
+.footer-legal a:hover{color:var(--muted)}
+
+/* REVEALS */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+.rv.on{opacity:1;transform:none}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}
+.rv.d3{transition-delay:.3s}.rv.d4{transition-delay:.4s}
+
+/* MOBILE */
+@media(max-width:1024px){
+  nav{padding:0 24px}
+  section{padding:80px 24px}
+  .hero-inner{grid-template-columns:1fr;padding:120px 24px 60px}
+  .hero-right{display:none}
+  .cred-inner{padding:0 24px;grid-template-columns:repeat(3,1fr)}
+  .cred-item:nth-child(4),.cred-item:nth-child(5){border-top:1px solid var(--line)}
+  .problem-grid{grid-template-columns:1fr}
+  .prob-card:nth-child(2n){border-right:none}
+  .prob-card{border-right:none!important}
+  .prob-card:nth-child(3){border-bottom:1px solid var(--line)!important}
+  .prob-card:nth-child(4){border-bottom:none!important}
+  .fw-layout{grid-template-columns:1fr}
+  .fw-tabs{border-right:none;border-bottom:1px solid var(--line)}
+  .sov-pillars{grid-template-columns:1fr}
+  .pillar{border-right:none;border-bottom:1px solid var(--line)}
+  .pillar:last-child{border-bottom:none}
+  .proof-grid{grid-template-columns:1fr}
+  .manifesto-inner{grid-template-columns:1fr;gap:40px}
+  .tools-grid{grid-template-columns:1fr}
+  .tool-item{border-right:none;border-bottom:1px solid var(--line)}
+  .tool-item:last-child{border-bottom:none}
+  .footer-top{grid-template-columns:1fr 1fr;gap:36px}
+  footer{padding:48px 24px}
+  .nav-links{display:none}
+  .cta-box{padding:48px 24px}
+  .philosophy{padding:60px 24px}
+}
+@media(max-width:640px){
+  .cred-inner{grid-template-columns:1fr 1fr}
+  .footer-top{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:16px;text-align:center}
+  .hero-proof{gap:24px}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-trail" id="curT"></div>
+
+<!-- NAVIGATION -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">RMV<span class="dot">.</span>Consult</a>
+    <ul class="nav-links">
+      <li><a href="#framework">Methodology</a></li>
+      <li><a href="#programs">Programs</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#tools">Resources</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <button class="nav-btn">Apply Now →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="grid-overlay"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">
+        <div class="badge-dot"></div>
+        <span>The Vertex Effect</span>
+      </div>
+      <h1>
+        Build a Business<br>
+        That Runs <em>Without</em><br>
+        You.
+      </h1>
+      <p class="hero-sub">RMV Consult installs <strong>operating systems</strong> into high-potential consulting businesses — so you scale with systems, not sweat.</p>
+      <div class="hero-actions">
+        <button class="btn-gold">Start Free Training →</button>
+        <button class="btn-ghost">Apply Now</button>
+      </div>
+      <div class="hero-proof">
+        <div class="proof-stat"><span class="n">$25M+</span><span class="l">Revenue Generated</span></div>
+        <div class="proof-stat"><span class="n">3,000+</span><span class="l">Members</span></div>
+        <div class="proof-stat"><span class="n">42</span><span class="l">Millionaire Clients</span></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="dashboard rv">
+        <div class="dash-header">
+          <div class="dash-dots">
+            <div class="dash-dot"></div>
+            <div class="dash-dot"></div>
+            <div class="dash-dot"></div>
+          </div>
+          <div class="dash-title">// Revenue Trajectory — Live</div>
+        </div>
+        <div class="dash-body">
+          <div class="dash-label">Monthly Recurring Revenue</div>
+          <span class="dash-value">$42,800</span>
+          <div class="dash-sub">↑ up from $3K at installation</div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+          <div class="dash-row">
+            <div class="dash-mini">
+              <span class="dm-val">156</span>
+              <span class="dm-lbl">Active Clients</span>
+            </div>
+            <div class="dash-mini">
+              <span class="dm-val">98%</span>
+              <span class="dm-lbl">Retention Rate</span>
+            </div>
+          </div>
+          <div class="dash-log">
+            <div class="log-item"><div class="log-dot green"></div><div class="log-text">New client onboarded — strategy call booked</div><div class="log-time">8s ago</div></div>
+            <div class="log-item"><div class="log-dot gold"></div><div class="log-text">Proposal accepted — $12,000 engagement</div><div class="log-time">3m ago</div></div>
+            <div class="log-item"><div class="log-dot"></div><div class="log-text">Referral received from existing client</div><div class="log-time">11m ago</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CREDIBILITY STRIP -->
+<div class="cred">
+  <div class="cred-inner">
+    <div class="cred-item rv"><div class="cred-n">$25M+</div><div class="cred-l">Client Revenue Generated</div></div>
+    <div class="cred-item rv d1"><div class="cred-n">3,000+</div><div class="cred-l">Professionals Trained</div></div>
+    <div class="cred-item rv d2"><div class="cred-n">42</div><div class="cred-l">Millionaire Clients</div></div>
+    <div class="cred-item rv d3"><div class="cred-n">1,200+</div><div class="cred-l">Case Studies</div></div>
+    <div class="cred-item rv d4"><div class="cred-n">92%</div><div class="cred-l">Success Rate</div></div>
+  </div>
+</div>
+
+<!-- PROBLEMS -->
+<section class="problem" id="problems">
+  <div class="inner">
+    <div class="eyebrow rv"><div class="eyebrow-line"></div><div class="eyebrow-txt">The Problem</div></div>
+    <h2 class="rv">Most consultants build<br><em>jobs</em>, not businesses.</h2>
+    <p class="lead rv">If your revenue stops when you stop working, you don't have a business — you have a very stressful freelance contract. We fix that.</p>
+    <div class="problem-grid">
+      <div class="prob-card rv">
+        <div class="prob-n">01 / 04</div>
+        <div class="prob-t">Inconsistent Leads</div>
+        <p class="prob-d">You go from feast to famine. Some months are great, others you're wondering where the next client comes from. No predictable acquisition engine.</p>
+        <span class="prob-arrow">→</span>
+      </div>
+      <div class="prob-card rv d1">
+        <div class="prob-n">02 / 04</div>
+        <div class="prob-t">Client Chaos</div>
+        <p class="prob-d">Delivery is a grind. Every client is different. No systems, no processes — just you improvising at full speed, every single day.</p>
+        <span class="prob-arrow">→</span>
+      </div>
+      <div class="prob-card rv d2">
+        <div class="prob-n">03 / 04</div>
+        <div class="prob-t">Revenue Plateaus</div>
+        <p class="prob-d">You hit a ceiling you can't break through. More work doesn't mean more money. You're trading time for money with no end in sight.</p>
+        <span class="prob-arrow">→</span>
+      </div>
+      <div class="prob-card rv d3">
+        <div class="prob-n">04 / 04</div>
+        <div class="prob-t">Founder Burnout</div>
+        <p class="prob-d">You built this to have freedom. Instead, you're the bottleneck in every decision, every deliverable, every call. The business owns you.</p>
+        <span class="prob-arrow">→</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FRAMEWORK -->
+<section class="framework" id="framework">
+  <div class="inner">
+    <div class="eyebrow rv"><div class="eyebrow-line"></div><div class="eyebrow-txt">The Methodology</div></div>
+    <h2 class="rv">The Vertex <em>Operating</em><br>System</h2>
+    <p class="lead rv">Five interlocked pillars that transform a consulting practice into a self-sustaining business engine. This is our proprietary framework.</p>
+    <div class="fw-layout rv">
+      <div class="fw-tabs" id="fwTabs">
+        <div class="fw-tab active" onclick="selectFw(this,0)">
+          <div class="fw-tab-num">01</div>
+          <div class="fw-tab-info"><div class="fw-tab-name">Positioning</div><div class="fw-tab-sub">Carve an undeniable niche</div></div>
+        </div>
+        <div class="fw-tab" onclick="selectFw(this,1)">
+          <div class="fw-tab-num">02</div>
+          <div class="fw-tab-info"><div class="fw-tab-name">Acquisition</div><div class="fw-tab-sub">Build a lead engine, not hope</div></div>
+        </div>
+        <div class="fw-tab" onclick="selectFw(this,2)">
+          <div class="fw-tab-num">03</div>
+          <div class="fw-tab-info"><div class="fw-tab-name">Delivery</div><div class="fw-tab-sub">Systematize your expertise</div></div>
+        </div>
+        <div class="fw-tab" onclick="selectFw(this,3)">
+          <div class="fw-tab-num">04</div>
+          <div class="fw-tab-info"><div class="fw-tab-name">Systems</div><div class="fw-tab-sub">Remove yourself from operations</div></div>
+        </div>
+        <div class="fw-tab" onclick="selectFw(this,4)">
+          <div class="fw-tab-num">05</div>
+          <div class="fw-tab-info"><div class="fw-tab-name">Scale</div><div class="fw-tab-sub">Build the growth flywheel</div></div>
+        </div>
+      </div>
+      <div class="fw-detail" id="fwDetail">
+        <span class="fw-tag">// Module 01 — Positioning</span>
+        <div class="fw-title">Own a Category.<br>Don't Compete In One.</div>
+        <p class="fw-body">Most consultants try to be everything to everyone. The highest-paid consultants in the world dominate a specific niche with absolute clarity. We help you find yours, validate it, and position yourself as the only logical choice.</p>
+        <ul class="fw-pts">
+          <li>Niche selection and market validation</li>
+          <li>Ideal client profile construction</li>
+          <li>Competitive differentiation strategy</li>
+          <li>Messaging and authority positioning</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section class="programs" id="programs" style="background:var(--deep)">
+  <div class="inner">
+    <div class="eyebrow rv"><div class="eyebrow-line"></div><div class="eyebrow-txt">Programs</div></div>
+    <h2 class="rv">Three paths.<br>One <em>destination</em>.</h2>
+    <p class="lead rv">Wherever you are in your journey, there is a Vertex program designed to take you to the next level. We meet you where you are.</p>
+    <div class="sov-pillars">
+      <div class="pillar rv">
+        <div class="pillar-top">
+          <span class="pillar-tier">For Beginners</span>
+          <div class="pillar-name">Vertex Launch</div>
+          <p class="pillar-promise">Land your first high-ticket clients and validate your consulting offer in 90 days.</p>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-tag">// Ideal for: Early-stage consultants with 0–3 clients</div>
+          <ul class="pillar-pts">
+            <li>Positioning & niche clarification</li>
+            <li>Outbound acquisition system</li>
+            <li>Proposal & closing frameworks</li>
+            <li>Onboarding & delivery templates</li>
+            <li>Community access</li>
+          </ul>
+          <button class="pillar-cta">Explore Program <span class="arrow">→</span></button>
+        </div>
+      </div>
+      <div class="pillar featured rv d1">
+        <div class="pillar-top">
+          <span class="pillar-badge">Most Popular</span>
+          <span class="pillar-tier">For Operators</span>
+          <div class="pillar-name">Vertex Scale</div>
+          <p class="pillar-promise">Build systems, hire a team, and engineer a business that doesn't require you.</p>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-tag">// Ideal for: Consultants doing $5K–$30K/month</div>
+          <ul class="pillar-pts">
+            <li>Full Vertex Operating System</li>
+            <li>Team building & SOPs</li>
+            <li>Inbound + outbound acquisition</li>
+            <li>Offer productization framework</li>
+            <li>Weekly group coaching calls</li>
+          </ul>
+          <button class="pillar-cta">Explore Program <span class="arrow">→</span></button>
+        </div>
+      </div>
+      <div class="pillar rv d2">
+        <div class="pillar-top">
+          <span class="pillar-tier">For Leaders</span>
+          <div class="pillar-name">Vertex Elite</div>
+          <p class="pillar-promise">Private mastermind. High-level strategy, elite networks, and investment-grade thinking.</p>
+        </div>
+        <div class="pillar-body">
+          <div class="pillar-tag">// Ideal for: Consultants at $50K+/month · By application only</div>
+          <ul class="pillar-pts">
+            <li>Quarterly in-person retreats</li>
+            <li>Direct access to RMV & team</li>
+            <li>Peer accountability group</li>
+            <li>M&A and exit strategy</li>
+            <li>Priority deal flow access</li>
+          </ul>
+          <button class="pillar-cta">Apply for Access <span class="arrow">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="results" id="results">
+  <div class="inner">
+    <div class="eyebrow rv"><div class="eyebrow-line"></div><div class="eyebrow-txt">Client Results</div></div>
+    <h2 class="rv">The numbers don't <em>lie</em>.</h2>
+    <p class="lead rv">Real transformations from real clients across every stage. These aren't outliers — they're what happens when systems meet execution.</p>
+    <div class="proof-grid">
+      <div class="proof-card rv">
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-metric">$3K → $42K / month · 4 months</div>
+        <p class="proof-quote">"Before RMV, I was grinding 60-hour weeks for inconsistent income. Within 4 months of installing the Vertex system, I had my first $40K month — and took a week off while it happened."</p>
+        <div class="proof-author">
+          <div class="proof-avatar">A</div>
+          <div>
+            <div class="proof-name">Alexandra C.</div>
+            <div class="proof-role">Digital Strategy Consultant, London</div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-card rv d1">
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-metric">Built a 7-figure advisory</div>
+        <p class="proof-quote">"I had the expertise but not the business. RMV gave me the architecture — positioning, acquisition, team. 18 months later I sold my first consulting firm. Now building the second."</p>
+        <div class="proof-author">
+          <div class="proof-avatar">M</div>
+          <div>
+            <div class="proof-name">Marcus T.</div>
+            <div class="proof-role">Operations Advisory, New York</div>
+          </div>
+        </div>
+      </div>
+      <div class="proof-card rv d2">
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-metric">Team of 1 → Team of 11</div>
+        <p class="proof-quote">"I was terrified to hire. The Vertex frameworks made delegation feel like a science, not a gamble. My team now handles 80% of delivery. I work 20 hours a week by choice."</p>
+        <div class="proof-author">
+          <div class="proof-avatar">J</div>
+          <div>
+            <div class="proof-name">James R.</div>
+            <div class="proof-role">HR Transformation Consultant, Dubai</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy" id="about">
+  <div class="manifesto-inner">
+    <div>
+      <p class="manifesto-quote">"Most consultants sell their time.<br>Our job is to help you build<br><span>infrastructure</span> instead."</p>
+      <br>
+      <p style="font-size:.8125rem;color:var(--muted);font-family:var(--ff-mono);letter-spacing:.1em;text-transform:uppercase;">— RMV Consult Manifesto</p>
+    </div>
+    <div class="manifesto-beliefs">
+      <div class="mb"><div class="mb-num">01</div><div class="mb-text">Businesses should be engineered, not improvised. Every system should be intentional.</div></div>
+      <div class="mb"><div class="mb-num">02</div><div class="mb-text">If the business cannot survive a week without you, it is not a business — it is a liability.</div></div>
+      <div class="mb"><div class="mb-num">03</div><div class="mb-text">Positioning is the highest-leverage decision a consultant ever makes. Most get it wrong.</div></div>
+      <div class="mb"><div class="mb-num">04</div><div class="mb-text">Revenue is not success. Profit margin at scale, with time freedom — that is success.</div></div>
+      <div class="mb"><div class="mb-num">05</div><div class="mb-text">The best investment is in systems and people, not in working harder alone.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS --> 
+<section class="tools" id="tools">
+  <div class="inner">
+    <div class="eyebrow rv"><div class="eyebrow-line"></div><div class="eyebrow-txt">Free Resources</div></div>
+    <h2 class="rv">Start with our <em>diagnostic</em><br>tools. Free.</h2>
+    <div class="tools-grid">
+      <div class="tool-item rv">
+        <div class="tool-icon">◎</div>
+        <div class="tool-name">Vertex Growth Assessment</div>
+        <p class="tool-desc">Answer 12 questions. Get a scored diagnosis of exactly where your consulting business is leaking money and time.</p>
+        <div class="tool-link">Take Assessment →</div>
+      </div>
+      <div class="tool-item rv d1">
+        <div class="tool-icon">◈</div>
+        <div class="tool-name">Niche Profitability Calculator</div>
+        <p class="tool-desc">Enter your niche parameters. Instantly see your market size, rate ceiling, and estimated 12-month revenue potential.</p>
+        <div class="tool-link">Use Calculator →</div>
+      </div>
+      <div class="tool-item rv d2">
+        <div class="tool-icon">◇</div>
+        <div class="tool-name">Pricing Framework Audit</div>
+        <p class="tool-desc">Most consultants are undercharging by 40–200%. This tool shows you where, why, and exactly how to fix it.</p>
+        <div class="tool-link">Run Audit →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final" id="apply">
+  <div class="inner final-inner">
+    <div class="eyebrow rv" style="justify-content:center"><div class="eyebrow-line"></div><div class="eyebrow-txt">Ready?</div><div class="eyebrow-line"></div></div>
+    <div class="cta-box rv" style="margin-top:56px">
+      <h2>Build a Business That<br>Runs <em>Without</em> You.</h2>
+      <p>We don't work with everyone. If you're serious about building a consulting business with real systems, real margins, and real freedom — apply below.</p>
+      <div class="cta-actions">
+        <button class="btn-gold">Apply for a Strategy Call →</button>
+        <button class="btn-ghost">Start Free Training</button>
+      </div>
+      <p class="cta-note">// No commitment required · Application reviewed within 48 hours</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">RMV<span>.</span>Consult</div>
+        <p class="footer-brand-p">We install operating systems into high-potential consulting businesses. Strategy, systems, and scale — all under one roof.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Vertex Launch</a></li>
+          <li><a href="#">Vertex Scale</a></li>
+          <li><a href="#">Vertex Elite</a></li>
+          <li><a href="#">Methodology</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Manifesto</a></li>
+          <li><a href="#">Results</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">Growth Assessment</a></li>
+          <li><a href="#">Pricing Audit</a></li>
+          <li><a href="#">Niche Calculator</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 RMV Consult. All rights reserved.</span>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Refund Policy</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur'),curT=document.getElementById('curT');
+let mx=0,my=0,tx=0,ty=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function tick(){tx+=(mx-tx)*.13;ty+=(my-ty)*.13;curT.style.left=tx+'px';curT.style.top=ty+'px';requestAnimationFrame(tick)})();
+document.querySelectorAll('a,button,.fw-tab,.prob-card,.pillar,.tool-item,.proof-card,.cred-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>curT.style.transform='translate(-50%,-50%) scale(2)');
+  el.addEventListener('mouseleave',()=>curT.style.transform='translate(-50%,-50%) scale(1)');
+});
+
+/* NAV */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('solid',scrollY>40));
+
+/* SCROLL REVEAL */
+const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')}),{threshold:.08,rootMargin:'0px 0px -32px 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* FRAMEWORK TABS */
+const fwData=[
+  {
+    tag:'// Module 01 — Positioning',
+    title:'Own a Category.<br>Don\'t Compete In One.',
+    body:'Most consultants try to be everything to everyone. The highest-paid consultants in the world dominate a specific niche with absolute clarity. We help you find yours, validate it, and position yourself as the only logical choice.',
+    pts:['Niche selection and market validation','Ideal client profile construction','Competitive differentiation strategy','Messaging and authority positioning']
+  },
+  {
+    tag:'// Module 02 — Acquisition',
+    title:'An Engine That Runs<br>Without Cold Sweat.',
+    body:'Referrals run out. Hope is not a strategy. We install a predictable acquisition engine — combining outbound precision with inbound authority — so you always know where the next client is coming from.',
+    pts:['Outbound sequencing and targeting','Content-to-client authority funnel','Referral network activation','Paid acquisition scaling']
+  },
+  {
+    tag:'// Module 03 — Delivery',
+    title:'Turn Your Expertise<br>Into a Repeatable Product.',
+    body:'Your knowledge is the asset. Your method is the product. We help you systematize your delivery so that outcomes are consistent — whether you are on the call or not.',
+    pts:['Client onboarding systemization','Delivery framework documentation','Results tracking and reporting','Scalable fulfillment structures']
+  },
+  {
+    tag:'// Module 04 — Systems',
+    title:'Remove Yourself From<br>Every Bottleneck.',
+    body:'If every decision routes through you, the business has a single point of failure: you. We map your entire operation, identify the bottlenecks, and build the SOPs and team structure to eliminate them.',
+    pts:['Operational SOP library','Team hiring and management frameworks','Delegation and authority matrix','KPI dashboards and accountability']
+  },
+  {
+    tag:'// Module 05 — Scale',
+    title:'Build the Flywheel.<br>Let It Spin.',
+    body:'When positioning is sharp, acquisition is automatic, delivery is systemized and operations run without you — all that remains is to accelerate. This is where we architect the growth flywheel that compounds.',
+    pts:['Offer ladder and ascension model','Partnership and channel strategy','Revenue diversification','Exit optionality planning']
+  }
+];
+
+function selectFw(el,i){
+  document.querySelectorAll('.fw-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const d=fwData[i],det=document.getElementById('fwDetail');
+  det.style.opacity='0';det.style.transform='translateY(8px)';
+  setTimeout(()=>{
+    det.innerHTML=`<span class="fw-tag">${d.tag}</span><div class="fw-title">${d.title}</div><p class="fw-body">${d.body}</p><ul class="fw-pts">${d.pts.map(p=>`<li>${p}</li>`).join('')}</ul>`;
+    det.style.transition='opacity .35s,transform .35s';
+    det.style.opacity='1';det.style.transform='none';
+  },180);
+}
+</script>
+</body>
+</html>
